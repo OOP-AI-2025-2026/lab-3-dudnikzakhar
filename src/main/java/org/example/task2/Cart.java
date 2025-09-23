@@ -4,66 +4,85 @@ import java.util.Arrays;
 
 public class Cart {
 
-    public Item[] contents;
-    int index;
+    private Item[] items;
+    private int itemCount;
 
-    Cart(Item[] _contents) {
-        this.contents = _contents;
+    public Cart(int contents) {
+        if (contents <= 0) {
+            throw new IllegalArgumentException("Місткість кошика має бути додатнім числом.");
+        }
+        this.items = new Item[contents];
+        this.itemCount = 0;
+
     }
 
-    public void removeById(int itemIndex) {
-
-        if (index == 0)
+    public void add(Item item) {
+        if (item == null) {
             return;
-
-        int foundItemIndex = findItemInArray(contents[itemIndex]);
-
-        if (foundItemIndex == -1)
+        }
+        if (isFull()) {
+            System.out.println("Немає місця для " + item.getName());
             return;
+        }
+        this.items[this.itemCount] = item;
+        this.itemCount++;
+    }
 
-        if (foundItemIndex == index - 1) {
-            contents[index - 1] = null;
-            index--;
+    public void removeItemById(long itemId) {
+        int foundIndex = findItemIndexById(itemId);
+
+        if (foundIndex == -1) {
             return;
         }
 
-        shiftArray(foundItemIndex);
+        shiftItemsLeft(foundIndex);
+        this.itemCount--;
+        this.items[this.itemCount] = null;
     }
 
-    public void shiftArray(int itemIndex) {
-        for (int i = itemIndex; i < index - 1; i++) {
-            contents[i] = contents[i + 1];
-        }
-        contents[index-1] = null;
-        index--;
-    }
-
-    public int findItemInArray(Item item) {
-        for (int i = 0; i < index; i++) {
-            if (contents[i].id == item.id) {
+    private int findItemIndexById(long itemId) {
+        for (int i = 0; i < this.itemCount; i++) {
+            if (this.items[i].getId() == itemId) {
                 return i;
             }
         }
-
-        return -1;
+        return -1; // not found
     }
 
-    void add(Item item) {
-        if (isCartFull())
-            return;
-
-        contents[index] = item;
-        index++;
+    private void shiftItemsLeft(int fromIndex) {
+        for (int i = fromIndex; i < this.itemCount - 1; i++) {
+            this.items[i] = this.items[i + 1];
+        }
     }
 
-    public boolean isCartFull() {
-        return index == contents.length;
+    public boolean isFull() {
+        return this.itemCount == this.items.length;
+    }
+
+    public double calculateTotalPrice() {
+        double sum = 0.0;
+        for (int i = 0; i < this.itemCount; i++) {
+            sum += this.items[i].getPrice();
+        }
+        return sum;
+    }
+
+    public Item[] getItems() {
+        Item[] copy = new Item[this.itemCount];
+
+        for (int i = 0; i < this.itemCount; i++) {
+            copy[i] = this.items[i];
+        }
+
+        return copy;
     }
 
     @Override
     public String toString() {
-        return "Cart{" +
-                "contents=" + Arrays.toString(contents) +
-                '}' + "\n";
+        return "Cart{"
+                + "items=" + Arrays.toString(getItems())
+                + ", itemCount=" + itemCount
+                + ", capacity=" + items.length
+                + '}';
     }
 }
