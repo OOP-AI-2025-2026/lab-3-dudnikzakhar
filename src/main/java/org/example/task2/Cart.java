@@ -10,6 +10,7 @@ public class Cart {
     public Cart(int contents) {
         if (contents <= 0) {
             throw new IllegalArgumentException("Місткість кошика має бути додатнім числом.");
+
         }
         this.items = new Item[contents];
         this.itemCount = 0;
@@ -21,26 +22,14 @@ public class Cart {
             return;
         }
         if (isFull()) {
-            System.out.println("Немає місця для " + item.getName());
-            return;
+            resize();
         }
+
         this.items[this.itemCount] = item;
         this.itemCount++;
     }
 
-    public void removeItemById(long itemId) {
-        int foundIndex = findItemIndexById(itemId);
-
-        if (foundIndex == -1) {
-            return;
-        }
-
-        shiftItemsLeft(foundIndex);
-        this.itemCount--;
-        this.items[this.itemCount] = null;
-    }
-
-    private int findItemIndexById(long itemId) {
+    private int findItemIndexInArray(long itemId) {
         for (int i = 0; i < this.itemCount; i++) {
             if (this.items[i].getId() == itemId) {
                 return i;
@@ -49,10 +38,21 @@ public class Cart {
         return -1; // not found
     }
 
-    private void shiftItemsLeft(int fromIndex) {
+    public void removeItemById(long itemId) {
+        int itemIndexToRemove = findItemIndexInArray(itemId);
+        if (itemIndexToRemove == -1) {
+            return;
+        }
+
+        shiftItems(itemIndexToRemove);
+    }
+
+    private void shiftItems(int fromIndex) {
         for (int i = fromIndex; i < this.itemCount - 1; i++) {
             this.items[i] = this.items[i + 1];
         }
+        this.itemCount--;
+        this.items[this.itemCount] = null;
     }
 
     public boolean isFull() {
@@ -75,6 +75,16 @@ public class Cart {
         }
 
         return copy;
+    }
+
+    private void resize() {
+        int newCapacity = this.items.length * 2;
+
+        Item[] newItems = new Item[newCapacity];
+
+        System.arraycopy(this.items, 0, newItems, 0, this.items.length);
+
+        this.items = newItems;
     }
 
     @Override

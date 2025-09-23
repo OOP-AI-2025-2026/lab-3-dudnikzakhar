@@ -4,59 +4,57 @@ public class intStack {
 
     private final int CAPACITY = 20;
 
-    private int[] elements;
-
-    private int size;
-
-    public void increaseCapacity() {
-        int newCapacity = 2 * elements.length;
-        int[] newElements = new int[newCapacity];
-
-        for (int i = 0; i < elements.length; i++) {
-            newElements[i] = elements[i];
-        }
-
-        this.elements = newElements;
-    }
+    private int[] items;
+    private int top = -1;
 
     public intStack() {
-        this.elements = new int[CAPACITY];
-        size = 0;
+        this.items = new int[CAPACITY];
     }
 
     public int size() {
-        return this.size;
+        return top + 1;
     }
 
     public void push(int item) {
-        if (size == elements.length) {
+        if (top + 1 == items.length) {
             increaseCapacity();
         }
-        elements[size] = item;
-        size++;
+        top++;
+        items[top] = item;
+    }
+
+    private void increaseCapacity() {
+        int newCapacity = 2 * items.length;
+        int[] newItems = new int[newCapacity];
+
+        for (int i = 0; i < items.length; i++) {
+            newItems[i] = items[i];
+        }
+
+        this.items = newItems;
     }
 
     public int pop() {
         if (isEmpty()) {
             return 0;
         }
-        size--;
-        return elements[size];
+        top--;
+        return items[top];
     }
 
     public boolean isEmpty() {
-        return (size == 0);
+        return (top == -1);
     }
 
     public void clear() {
-        this.size = 0;
+        top = -1;
     }
 
     public int peek() {
         if (isEmpty()) {
             return 0;
         }
-        return elements[size - 1];
+        return items[top];
     }
 
 }
