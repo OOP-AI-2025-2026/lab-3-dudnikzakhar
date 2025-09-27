@@ -23,6 +23,16 @@ public class Main {
 
         System.out.println(cart);
 
+        // resize
+        System.out.println("\nТестування розширення кошика");
+        System.out.println("11-й елемент, щоб викликати resize()");
+        cart.add(new Item(11, "Apple AirPods Pro", 10999));
+        System.out.println("Після розширення:");
+        System.out.println(cart);
+
+        System.out.println("\nВидалення елемента з ID 9:");
+        cart.removeItemById(9);
+        System.out.println(cart);
         cart.removeItemById(9);
 
         System.out.println(cart);
@@ -54,7 +64,7 @@ public class Main {
         for (int i = 0; i < 25; i++) {
             stack.push(100 + i);
         }
-        System.out.println("Розмір стека після додавання 15 елементів: " + stack.size());
+        System.out.println("Розмір стека після додавання 25 елементів: " + stack.size());
         System.out.println("Верхній елемент: " + stack.peek());
 
         System.out.println("Очищення стеку");

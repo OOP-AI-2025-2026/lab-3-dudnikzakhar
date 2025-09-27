@@ -38,8 +38,7 @@ public class intStack {
         if (isEmpty()) {
             return 0;
         }
-        top--;
-        return items[top];
+        return items[top--];
     }
 
     public boolean isEmpty() {
